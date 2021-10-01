@@ -2,48 +2,52 @@ section	.data
 
 ;Problem 1 variable declarations
 
-	msg db "Largest: ", 0xA, 0xD
-	len equ $- msg
 	
-	x dd '400'
-	y dd '200'
-	z dd '500'
+	
+	num1 dd	600
+	num2 dd 200
+	num3 dd 500
 
 section .bss
 	
-	largest	dd	4
-	smallest dd	4
+	largest	resb	4
+	smallest resb	4
+
 section	.text
 	global _start
 
 
 _start:
 	
-	mov ecx, [x]
-	cmp ecx, [y]
-	jg compare_z
+	mov	ecx, [num1]
+	cmp	ecx, [num2]
+	jg	checking_num3
 
-compare_z:
-	cmp ecx, [z]
-	jg _exit
-	mov ecx, [z]
+checking_num3:
+	cmp	ecx, [num3]
+	jg	num1LargerThanNum3
+	mov	ecx, [num3]
 
-_exit:
-	mov [largest], ecx
-	mov ecx, msg
-	mov dx, len
-	mov bx, 1
-	mov ax, 4
-	int 0x80
+num1LargerThanNum3:
 	
-	mov ecx, largest
-	mov dx, 3
-	mov bx, 1
-	mov ax, 4
-	int 0x80
+	mov	[largest], ecx
+	jmp	next
 
-	mov ax, 1
-	int 80h
+next:
+	mov	ecx, [num2]
+	cmp	ecx, [num3]
+	jl	checking_num1
+
+checking_num1:
+	cmp	ecx, [num2]
+	jl	num2LessThanNum3
+	mov	ecx, [num2]
+
+num2LessThanNum3:
+	mov	[smallest], ecx
+	jmp	_end
+
+
 
 _end:
 	mov	rax, 60
